@@ -1,0 +1,16 @@
+
+---3.70---
+A. 
+p 0
+y 8
+x 0
+next 8
+
+B. 
+16
+because it is the maximum byte that every element struct can have
+and 
+e1 is 16 = 8 + 8 
+e2 is 16 = 8 + 8
+C.
+up->e2.p = *(up->e2.next->e1.p) - up->e2.next->e1.y;

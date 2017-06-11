@@ -1,0 +1,75 @@
+
+Pexexlab
+
+//preparation 
+I first update the emacs with the command 
+alias emacs='~eggert/bin64/bin/emacs-25.2' so I can use emacs directly 
+
+then we begin our trace process by 
+gdb emacs 
+
+then set the break point to Ftimes, so everytime Ftimes is called, the function is paused
+(gdb) break Ftimes
+
+Then I use command 
+(gdb) set disassemble-next-line on
+so that each time GDB is stopped at a breakpoint or after executing a step, it will display the next source line followed by the disassembly of it.
+
+To print to a file instead of just stdout,
+set logging on
+Then set a macro to make things easier 
+(gdb) define n
+Type commands for definition of "n".
+End with a line saying just "end".
+>stepi
+>info register
+>end
+
+//Run the command and trace 
+
+r emacs -Q -batch -eval '(print (* 1250284240 -1844255039))'
+
+After triggering the first break point, I use n(which is defined by macro) to proceed
+At first I created a chaos because I did not know the command that the arrow points is the command 
+that will be executed. When I ran into a jump, I looked at the %rip and found it did not move as I expected
+Then I had to correct all the mistakes made through those push statements. 
+
+Another tragedy happened as I switched between different windows of putty(to switch between emacs trace, lab report and gdb).
+My network wend down and all of my work on gdb were gone. I had to reproduce my results.
+
+Then I put all the registers from $rax to $rip as watchpoints, so if any of the value is changed, I will be notified immediately 
+
+There are couple of a few commands that I found quite useful. 
+1.
+x followed by register or memory address to see what is stored in that address
+  for example
+  (gdb) x/gx $rsp+18
+  was used to examine  movq   $0x0,0x18(%rsp)
+  but I once used print command to give wrong result for memory address. 
+
+2.
+Enter	to repeat previous command 
+
+
+//Examine Integer Overflow 
+
+gcc -S -O2 ovf.c
+gcc -S -O2 -fwrapv ovf.c
+These two commands are what I usually use to generate assembly code
+by gcc. They are quite straightforward. What I did was just
+run the command and go to the right place to compare them.
+
+However, for the second command,
+gcc -S -O2 -fsanitize=undefined ovf.c
+At first an error shows up, the flag -fsanitize is not recognized. 
+I looked it up what this flag means and found this flag was supported by gcc 4.9 or later, while the one on Linux machine is just 4.8.
+As a result, I changed the alias of gcc(actually I wrote a script 
+for changing gcc version) and it ran successfully. 
+
+------update.sh------
+#! /bin/bash
+
+alias gcc='/usr/local/cs/bin/gcc'
+export PATH=$PATH:/usr/local/cs/bin
+gcc --version
+python3 --version

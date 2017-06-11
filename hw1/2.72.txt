@@ -1,0 +1,7 @@
+Question 2.72
+
+A. because sizeof()function always returns a size_t, which, in other word, unsigned int. 
+in some 32-bits machines, it is define by typedef unsigned int size_t. 
+As a result,  maxbytes minus an unsigned int will result in returning an 
+unsigned integer that is awlays larger than 0. 
+B. maxbyte> 0 &&  maxbytes>=sizeof(val)

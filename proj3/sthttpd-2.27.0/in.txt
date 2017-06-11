@@ -1,0 +1,8 @@
+So it turns out the -D(ebugging) flag specifically prevents the 
+server from serving as a daemon (background service). Meaning 
+thttpd runs in the foreground, "taking over" the shell window as
+ long you don't send a Keyboard Interrupt (Ctrl+C).
+What this means practically is you need to open up another shell
+ window, login to the same SEASNet server, and send your requests 
+(through e.g. 'curl' command) to the specific port from there to 
+verify that it works.

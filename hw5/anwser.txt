@@ -1,0 +1,13 @@
+Question 12.18
+A. Thread unsafe, cross unsafe region at the step H1L1S2
+B. Thread safe, no unsafe region crossed
+C. Thread unsafe, cross unsafe region at step L1H2L2
+
+Question 12.24
+In this case, the rio is not explicitly reentrant because 
+it has pointers passed in. Otherwise, 
+the reentrancy is a property of both caller and callee. 
+The caller must keep the pointer to have no shared data, 
+otherwise it is not reentrant. 
+
+

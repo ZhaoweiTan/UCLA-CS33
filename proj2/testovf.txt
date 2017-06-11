@@ -1,0 +1,74 @@
+
+The command I used for three comparisons are as following:
+gcc -S -O2 ovf.s
+gcc -c -O2 -fsanitize=undefined ovf ovf.s 
+gcc -S -O2 -fwrapv ovf.s 
+
+
+For the assembly of just -O2
+and ther result is only two lines:
+        xorl    %eax, %eax 
+        ret       
+
+Because adding two LONG_MAX will always result in an overflow, 
+which is very deterministic, this program will always return 0. 
+The program will just XOR %eax(to create a 0 in %eax).
+
+
+For the assembly of -fsanitize=undefined
+
+.LFB0:
+        .cfi_startproc
+        pushq   %rbp
+        .cfi_def_cfa_offset 16
+        .cfi_offset 6, -16
+        pushq   %rbx
+        .cfi_def_cfa_offset 24
+        .cfi_offset 3, -24
+        movabsq $9223372036854775807, %rdx
+        subq    $8, %rsp
+        .cfi_def_cfa_offset 32
+        movq    big(%rip), %rbx
+        movq    %rbx, %rbp
+        addq    %rdx, %rbp
+        jo      .L6
+.L2:
+        cmpq    %rbp, %rbx
+        setg    %al
+        addq    $8, %rsp
+        .cfi_remember_state
+        .cfi_def_cfa_offset 24
+        popq    %rbx
+        .cfi_def_cfa_offset 16
+        popq    %rbp
+        .cfi_def_cfa_offset 8
+        ret
+.L6:
+        .cfi_restore_state
+        movq    %rbx, %rsi
+        movl    $.Lubsan_data0, %edi
+        call    __ubsan_handle_add_overflow
+        jmp     .L2
+        .cfi_endproc
+
+The function first save two callee-saved registers %rdx and %rbx to put 
+LONG_MAX and big. Then it calls a gcc-defined function(due to the flag
+-fsanitize=undefined) to examine whether this operation overflows. 
+
+
+
+For the assembly of -fwrapv
+Here is what we get for testovf:
+
+        movq    big(%rip), %rax
+        movabsq $9223372036854775807, %rdx
+        addq    %rax, %rdx
+        cmpq    %rdx, %rax
+        setg    %al
+        ret
+...(and the rest of code is to declare a global variable 
+called big and assign value for it)
+
+The compiler just translate what we write in the code. 
+It copies LONG_MAX into register %rdx, add big and 
+%rdx together and comparing this sum with %rdx. 

@@ -1,0 +1,39 @@
+Question 2.82 
+
+A. false 
+if x = INT_MIN
+because the negation of INT_MIN is INTMIN, which is smaller than y in the second case. 
+
+
+B. true
+17*y + 15*x
+= 16*(x+y) + y - x
+= ((x+y)<<4)+y-x
+
+C.true 
+~x = -x -1
+~y = -y -1
+RHS = ~(x+y) = -(x+y) -1 = -x - y -1
+LHS = ~x + ~y + 1 = -x -y -1  
+
+D. true
+becuase the original bits are not changed during the conversion of unsigned to signed bits, the bits are just added (substracted) as usual and nothing changed in bit during the negation. 
+
+E. true
+because right shift will truncate the last two digits of the number, and left shift will give those two digits 0 by default. as a result, it must be smaller or equal to the original number, depending on the original number's last two digits. 
+
+F. True
+ux&(-1<<31) takes the sign bit. 
+and there are two senarios: the sign bit is 0 or 1
+if it is 0, unsigned right shift will give 0 at the beginning. 
+if it is 1, because unsigned shift is different from signed shift, which will mirror the sign bit, so the number will also end up with 1.  
+
+
+G. False
+LHS = x>>(sizeof(int)-7). However, because this is signed integer, the numbers will right shift with the signed bit copied.
+RHS = (x & 0000007f), which takes the last 7 digits in binary 
+For example, as x = 0xFFFFFFFFF
+then LHS will be FFFFFFFF
+while the RHS will just be 0x7F
+so LHS != RHS
+

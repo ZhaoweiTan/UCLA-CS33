@@ -1,0 +1,39 @@
+2.89
+
+1.
+True
+LHS is to convert x into exact expression in float.
+RHS will convert x into a double and then cast it as a float.
+Because double has higher precision and then be cast to lower precision float
+it is the same as just cast to a float.
+
+
+2. 
+False
+Here we have the assumption -fwrapv might come to be useful. 
+as x-y overflows(or underflows), the program will just wrap around, 
+while double x - double y will have wider range so that the result will not overflow
+x == y == Tmin
+
+3. 
+True
+Although floating point operations are not associative
+all the double/floats are converted from integers, so there will not be any overflow or
+undefined behavior(like NaN) happening in this program 
+
+4.
+False
+Because this time, as three integers multiplying with each other might result in some number 
+that might not be held in a double float's precision. For example
+all we need to do is pick large prime numbers that is not divisible by 2
+x = 2**31 + 1
+y = 2**30 + 2**5 + 1;
+z = 2**31 + 2**7 + 1;
+In the process of x*y or y*z, the numbers of fraction part are rounded becuase there is no 
+exact representation when they are multiplying with each other.
+
+5. 
+false
+if x == 0, then dx/dx will give NaN, while other real numbers will give 1
+
+

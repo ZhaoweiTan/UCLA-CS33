@@ -1,0 +1,55 @@
+-------Q 3.67--------------
+
+A.
+		rsp offset
+|		|104
+|		|96
+|		|88
+|		|80
+|		|72
+|		|64	<rdi
+|		|56
+|		|48
+|		|40
+|		|32
+|z	rdx(z)	|24	<rax
+|s.p	rax,&z	|16
+|s.a[1]	rsi(y)	|8
+|s.a[0]	rdi(x)	|0	<rsp
+
+B.
+The function passes %rdi which is rsp+64 on call stack
+
+C. 
+s.a[0]: rsp + 8
+s.a[1]: rsp + 16
+s.p:    rsp + 24
+(just follow the source code to get the anwser 
+
+D.
+rdi = rax = y 
+rdi + 8 = x 
+rdi + 16 = z
+
+E. 
+
+		rsp offset
+|		|104
+|		|96
+|		|88
+|	r.q(z)	|80
+|r.u[1]=x	|72
+|r.u[0]=y	|64	<rdi
+|		|56
+|		|48
+|		|40
+|		|32
+|	rdx(z)	|24	<rax
+|s.p	rax,&z	|16
+|s.a[1]	rsi(y)	|8
+|s.a[0]	rdi(x)	|0	<rsp
+
+
+F. 
+Structures are passed in register that contain the address of the structure,
+and they are returned in a same way.
